@@ -1,1 +1,166 @@
+import java.util.*;
+
+public class Comparison {
+
+    // Autómata finito
+    public static String finiteAutomatonCompare(String a, String b) {
+        // Implementación del autómata finito para comparar a y b
+        int n = Math.min(a.length(), b.length());
+
+        for (int i = 0; i < n; i++) {
+            char digitA = a.charAt(i);
+            char digitB = b.charAt(i);
+
+            if (digitA < digitB) {
+                return "El primer valor es menor";
+            } else if (digitA > digitB) {
+                return "El primer valor es mayor";
+            }
+        }
+
+        if (a.length() < b.length()) {
+            return "El primer valor es menor";
+        } else if (a.length() > b.length()) {
+            return "El primer valor es mayor";
+        } else {
+            return "Ambos valores son iguales";
+        }
+    }
+    // Devuelve el resultado de la comparación (mayor, menor o igual)
+
+    // Autómata de pila
+    public static String pushdownAutomatonCompare(String a, String b) {
+        Stack<Character> stackA = new Stack<>();
+        Stack<Character> stackB = new Stack<>();
+
+        // Almacenar los dígitos de los números en las pilas
+        for (int i = a.length() - 1; i >= 0; i--) {
+            stackA.push(a.charAt(i));
+        }
+
+        for (int i = b.length() - 1; i >= 0; i--) {
+            stackB.push(b.charAt(i));
+        }
+
+        // Realizar la comparación
+        while (!stackA.isEmpty() && !stackB.isEmpty()) {
+            char digitA = stackA.pop();
+            char digitB = stackB.pop();
+
+            if (digitA < digitB) {
+                return "El primer valor es menor";
+            } else if (digitA > digitB) {
+                return "El primer valor es mayor";
+            }
+        }
+
+        if (stackA.isEmpty() && stackB.isEmpty()) {
+            return "Ambos valores son iguales";
+        } else if (stackA.isEmpty()) {
+            return "El primer valor es menor";
+        } else {
+            return "El primer valor es mayor";
+        }
+    }
+
+    // Máquina de Turing
+    public static String turingMachineCompare(String a, String b) {
+        // Implementación de la máquina de Turing para comparar a y b
+        // Devuelve el resultado de la comparación (mayor, menor o igual)
+        TuringMachine tm = new TuringMachine(a, b);
+        tm.run();
+        return tm.getResult();
+    }
+
+    // Clase TuringMachine
+    public static class TuringMachine {
+        private String inputA;
+        private String inputB;
+        private String result;
+
+        public TuringMachine(String a, String b) {
+            inputA = a;
+            inputB = b;
+            result = "";
+        }
+
+        public void run() {
+            int i = 0;
+            while (i < inputA.length() && i < inputB.length()) {
+                char digitA = inputA.charAt(i);
+                char digitB = inputB.charAt(i);
+
+                if (digitA < digitB) {
+                    result = "El primer valor es menor";
+                    return;
+                } else if (digitA > digitB) {
+                    result = "El primer valor es mayor";
+                    return;
+                }
+                i++;
+            }
+
+            if (inputA.length() < inputB.length()) {
+                result = "El primer valor es menor";
+            } else if (inputA.length() > inputB.length()) {
+                result = "El primer valor es mayor";
+            } else {
+                result = "Ambos valores son iguales";
+            }
+        }
+        public String getResult() {
+            return result;
+        }
+    }
+
+
+
+    public static void main(String[] args) {
+        // Números binarios de entrada
+        String a = "1011";
+        String b = "1101";
+
+        // Comparación de tiempos de ejecución
+        long startTime = System.nanoTime();
+
+        // Ejecución del autómata finito
+        String result1 = finiteAutomatonCompare(a, b);
+
+        // Tiempo de ejecución del autómata finito
+        long finiteAutomatonTime = System.nanoTime() - startTime;
+
+        // Reinicio del contador de tiempo
+        startTime = System.nanoTime();
+
+        // Ejecución del autómata de pila
+        String result2 = pushdownAutomatonCompare(a, b);
+
+        // Tiempo de ejecución del autómata de pila
+        long pushdownAutomatonTime = System.nanoTime() - startTime;
+
+        // Reinicio del contador de tiempo
+        startTime = System.nanoTime();
+
+        // Ejecución de la máquina de Turing
+        String result3 = turingMachineCompare(a, b);
+
+        // Tiempo de ejecución de la máquina de Turing
+        long turingMachineTime = System.nanoTime() - startTime;
+
+        // Comparación de los tiempos de ejecución
+        if (finiteAutomatonTime < pushdownAutomatonTime && finiteAutomatonTime < turingMachineTime) {
+            // El autómata finito fue más rápido
+            System.out.println("El autómata finito fue más rápido");
+        } else if (pushdownAutomatonTime < finiteAutomatonTime && pushdownAutomatonTime < turingMachineTime) {
+            // El autómata de pila fue más rápido
+            System.out.println("El autómata de pila fue más rápido");
+        } else {
+            // La máquina de Turing fue más rápida
+            System.out.println("La máquina de Turing fue más rápida");
+        }
+    }
+}
+
+
+
 
